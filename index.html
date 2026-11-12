@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Realidad Aumentada — Personaje en el piso</title>
+<meta name="description" content="Apunta la cámara del celular al piso y aparece un personaje 3D parado en el suelo real.">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+  :root{--bg:#e8eef5;--ink:#14213d;--muted:#4a5a78;--accent:#ff5a36;--card:#fff;--line:#c9d4e3}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1a2e;--ink:#eaf0fa;--muted:#9fb0cc;--card:#17243d;--line:#2a3b5c}}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+  h1{font-size:clamp(1.8rem,7vw,2.8rem);line-height:1.05;font-weight:800;margin:12px 0 8px;letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 20px}
+  model-viewer{width:100%;height:58vh;min-height:340px;background:radial-gradient(circle at 50% 40%,var(--card),var(--bg));border:2px solid var(--line);border-radius:20px;--poster-color:transparent;position:relative}
+  .ar-btn{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:var(--accent);color:#fff;border:0;border-radius:999px;padding:14px 26px;font:800 1.05rem system-ui,sans-serif;box-shadow:0 6px 18px rgba(255,90,54,.4);cursor:pointer}
+  #aviso{display:none;margin:14px 0 0;padding:12px 14px;border-left:4px solid var(--accent);background:var(--card);border-radius:8px}
+  section{margin-top:28px}
+  h2{font-size:1.2rem;margin:0 0 8px}
+  ol{padding-left:1.2rem;margin:0}
+  li{margin:6px 0}
+  .nota{color:var(--muted);font-size:.92rem;margin-top:10px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Mi personaje en el piso</h1>
+  <p class="sub">Abre esta página en tu celular, toca <b>Ver en AR</b> y apunta la cámara al piso.</p>
+
+  <!--
+    ===== PARA PONER A GOKU =====
+    Cambia el atributo src de abajo por el enlace de tu modelo .glb de Goku.
+    Opción fácil: pon el archivo goku.glb en esta misma carpeta y usa  src="goku.glb"
+    En iPhone, además agrega:  ios-src="goku.usdz"  (necesita ese formato extra).
+  -->
+  <model-viewer id="visor"
+    src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Assets@main/Models/CesiumMan/glTF-Binary/CesiumMan.glb"
+    alt="Personaje 3D"
+    ar
+    ar-modes="scene-viewer webxr quick-look"
+    ar-scale="auto"
+    camera-controls
+    auto-rotate
+    autoplay
+    shadow-intensity="1"
+    touch-action="pan-y">
+    <button slot="ar-button" class="ar-btn">📱 Ver en AR (apunta al piso)</button>
+  </model-viewer>
+
+  <p id="aviso">Tu navegador o dispositivo no soporta AR. Ábrelo en el celular con Chrome (Android) o Safari (iPhone).</p>
+
+  <section>
+    <h2>Cómo grabar tu video</h2>
+    <ol>
+      <li>Activa primero la <b>grabadora de pantalla</b> de tu celular.</li>
+      <li>Toca el botón naranja <b>Ver en AR</b>.</li>
+      <li><b>Mueve el celular despacio apuntando al piso</b> unos segundos (así detecta la superficie).</li>
+      <li>Toca el piso en la pantalla → el personaje aparece <b>parado en el suelo real</b>.</li>
+      <li>Camina a su alrededor y detén la grabación.</li>
+    </ol>
+    <p class="nota">¿Prefieres AR con marcador? Abre <a href="marcador.html">marcador.html</a> (imprimes el marcador HIRO).</p>
+  </section>
+</main>
+<script>
+  const v = document.getElementById('visor');
+  v.addEventListener('load', () => {
+    if (!v.canActivateAR) document.getElementById('aviso').style.display = 'block';
+  });
+</script>
+</body>
+</html>
