@@ -16,6 +16,7 @@
   .sub{color:var(--muted);margin:0 0 20px}
   model-viewer{width:100%;height:58vh;min-height:340px;background:radial-gradient(circle at 50% 40%,var(--card),var(--bg));border:2px solid var(--line);border-radius:20px;--poster-color:transparent;position:relative}
   .ar-btn{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:var(--accent);color:#fff;border:0;border-radius:999px;padding:14px 26px;font:800 1.05rem system-ui,sans-serif;box-shadow:0 6px 18px rgba(255,90,54,.4);cursor:pointer}
+  .ar-btn:disabled{opacity:.6;box-shadow:none;cursor:default}
   #aviso{display:none;margin:14px 0 0;padding:12px 14px;border-left:4px solid var(--accent);background:var(--card);border-radius:8px}
   section{margin-top:28px}
   h2{font-size:1.2rem;margin:0 0 8px}
@@ -37,17 +38,22 @@
     En iPhone, además agrega:  ios-src="goku.usdz"  (necesita ese formato extra).
   -->
   <model-viewer id="visor"
-    src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Assets@main/Models/CesiumMan/glTF-Binary/CesiumMan.glb"
-    alt="Personaje 3D"
+    src="personaje.glb"
+    alt="Guerrero 3D caminando"
+    loading="eager"
     ar
     ar-modes="scene-viewer webxr quick-look"
     ar-scale="auto"
     camera-controls
-    auto-rotate
+    camera-orbit="30deg 70deg 5m"
     autoplay
-    shadow-intensity="1"
+    animation-name="Caminar"
+    interaction-prompt="none"
+    shadow-intensity="0.8"
     touch-action="pan-y">
-    <button slot="ar-button" class="ar-btn">📱 Ver en AR (apunta al piso)</button>
+    <!-- se oculta el botón interno: usamos el nuestro para que funcione con un solo toque -->
+    <span slot="ar-button" hidden></span>
+    <button id="btn-ar" class="ar-btn" disabled>Cargando personaje…</button>
   </model-viewer>
 
   <p id="aviso">Tu navegador o dispositivo no soporta AR. Ábrelo en el celular con Chrome (Android) o Safari (iPhone).</p>
@@ -66,9 +72,18 @@
 </main>
 <script>
   const v = document.getElementById('visor');
+  const btn = document.getElementById('btn-ar');
+  // El botón se activa solo cuando el modelo ya cargó; antes los toques se perdían.
   v.addEventListener('load', () => {
-    if (!v.canActivateAR) document.getElementById('aviso').style.display = 'block';
+    if (v.canActivateAR) {
+      btn.disabled = false;
+      btn.textContent = '📱 Ver en AR (apunta al piso)';
+    } else {
+      btn.textContent = 'AR no disponible aquí';
+      document.getElementById('aviso').style.display = 'block';
+    }
   });
+  btn.addEventListener('click', () => v.activateAR());
 </script>
 </body>
 </html>
