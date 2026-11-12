@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Realidad Aumentada — Personaje en el piso</title>
-<meta name="description" content="Apunta la cámara del celular al piso y aparece un personaje 3D parado en el suelo real.">
+<title>Torre Eiffel AR</title>
+<meta name="description" content="Apunta la cámara del celular al piso y aparece la Torre Eiffel en 3D sobre el suelo real.">
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
   :root{--bg:#e8eef5;--ink:#14213d;--muted:#4a5a78;--accent:#ff5a36;--card:#fff;--line:#c9d4e3}
@@ -28,37 +28,28 @@
 </head>
 <body>
 <main>
-  <h1>Mi personaje en el piso</h1>
+  <h1>La Torre Eiffel en tu piso</h1>
   <p class="sub">Abre esta página en tu celular, toca <b>Ver en AR</b> y apunta la cámara al piso.</p>
 
-  <!--
-    ===== PARA PONER A GOKU =====
-    Cambia el atributo src de abajo por el enlace de tu modelo .glb de Goku.
-    Opción fácil: pon el archivo goku.glb en esta misma carpeta y usa  src="goku.glb"
-    En iPhone, además agrega:  ios-src="goku.usdz"  (necesita ese formato extra).
-  -->
+  <!-- torre.glb se genera con: node herramientas/generar-torre.mjs -->
   <model-viewer id="visor"
-    src="personaje.glb"
-    alt="Guerrero 3D caminando"
+    src="torre.glb"
+    alt="Torre Eiffel en 3D"
     loading="eager"
     ar
     ar-modes="webxr scene-viewer quick-look"
     ar-placement="floor"
     ar-scale="auto"
     camera-controls
-    camera-target="0m 0.75m 0m"
-    camera-orbit="20deg 78deg 4.6m"
-    max-camera-orbit="auto auto 8m"
+    camera-orbit="35deg 80deg auto"
     tone-mapping="commerce"
-    exposure="1.1"
-    autoplay
-    animation-name="Caminar"
+    exposure="1.05"
     interaction-prompt="none"
     shadow-intensity="0.8"
     touch-action="pan-y">
     <!-- se oculta el botón interno: usamos el nuestro para que funcione con un solo toque -->
     <span slot="ar-button" hidden></span>
-    <button id="btn-ar" class="ar-btn" disabled>Cargando personaje…</button>
+    <button id="btn-ar" class="ar-btn" disabled>Cargando torre…</button>
   </model-viewer>
 
   <p id="aviso">Tu navegador o dispositivo no soporta AR. Ábrelo en el celular con Chrome (Android) o Safari (iPhone).</p>
@@ -70,8 +61,8 @@
       <li>Toca el botón naranja <b>Ver en AR</b>.</li>
       <li>Si Chrome pregunta, toca <b>Permitir</b> para usar la cámara.</li>
       <li><b>Mueve el celular despacio apuntando al piso</b> unos segundos (así detecta la superficie).</li>
-      <li>El personaje aparece <b>caminando en el suelo real</b>. Puedes arrastrarlo para moverlo y pellizcar para cambiar su tamaño.</li>
-      <li>Camina a su alrededor y detén la grabación.</li>
+      <li>Toca el piso donde la quieras: la torre <b>se queda fija en ese lugar</b>. Pellizca para hacerla más grande o pequeña.</li>
+      <li>Camina a su alrededor (360°) y detén la grabación.</li>
     </ol>
     <p class="nota">¿Prefieres AR con marcador? Abre <a href="marcador.html">marcador.html</a> (imprimes el marcador HIRO).</p>
   </section>
