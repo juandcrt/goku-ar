@@ -42,10 +42,15 @@
     alt="Guerrero 3D caminando"
     loading="eager"
     ar
-    ar-modes="scene-viewer webxr quick-look"
+    ar-modes="webxr scene-viewer quick-look"
+    ar-placement="floor"
     ar-scale="auto"
     camera-controls
-    camera-orbit="30deg 70deg 5m"
+    camera-target="0m 0.75m 0m"
+    camera-orbit="20deg 78deg 4.6m"
+    max-camera-orbit="auto auto 8m"
+    tone-mapping="commerce"
+    exposure="1.1"
     autoplay
     animation-name="Caminar"
     interaction-prompt="none"
@@ -63,8 +68,9 @@
     <ol>
       <li>Activa primero la <b>grabadora de pantalla</b> de tu celular.</li>
       <li>Toca el botón naranja <b>Ver en AR</b>.</li>
+      <li>Si Chrome pregunta, toca <b>Permitir</b> para usar la cámara.</li>
       <li><b>Mueve el celular despacio apuntando al piso</b> unos segundos (así detecta la superficie).</li>
-      <li>Toca el piso en la pantalla → el personaje aparece <b>parado en el suelo real</b>.</li>
+      <li>El personaje aparece <b>caminando en el suelo real</b>. Puedes arrastrarlo para moverlo y pellizcar para cambiar su tamaño.</li>
       <li>Camina a su alrededor y detén la grabación.</li>
     </ol>
     <p class="nota">¿Prefieres AR con marcador? Abre <a href="marcador.html">marcador.html</a> (imprimes el marcador HIRO).</p>
@@ -73,17 +79,26 @@
 <script>
   const v = document.getElementById('visor');
   const btn = document.getElementById('btn-ar');
+  const aviso = document.getElementById('aviso');
+  const listo = () => { btn.disabled = false; btn.textContent = '📱 Ver en AR (apunta al piso)'; };
   // El botón se activa solo cuando el modelo ya cargó; antes los toques se perdían.
+  // La revisión de soporte AR puede tardar un instante más que la carga, por eso se reintenta.
   v.addEventListener('load', () => {
-    if (v.canActivateAR) {
-      btn.disabled = false;
-      btn.textContent = '📱 Ver en AR (apunta al piso)';
-    } else {
+    if (v.canActivateAR) return listo();
+    setTimeout(() => {
+      if (v.canActivateAR) return listo();
       btn.textContent = 'AR no disponible aquí';
-      document.getElementById('aviso').style.display = 'block';
+      aviso.style.display = 'block';
+    }, 1500);
+  });
+  // AR dentro de Chrome (WebXR): pide permiso de cámara al primer toque, sin abrir otra app.
+  btn.addEventListener('click', () => v.activateAR());
+  v.addEventListener('ar-status', (e) => {
+    if (e.detail.status === 'failed') {
+      aviso.textContent = 'No se pudo abrir la cámara AR. Revisa que Chrome tenga permiso de cámara y que tengas instalado "Servicios de Google Play para RA" (ARCore), luego vuelve a tocar el botón.';
+      aviso.style.display = 'block';
     }
   });
-  btn.addEventListener('click', () => v.activateAR());
 </script>
 </body>
 </html>
